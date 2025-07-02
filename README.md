@@ -81,4 +81,20 @@ This script only sets up the AWS infrastructure. To deploy your actual applicati
 
 ## Important Notes
 
-* **Clean-up:** This script **does not** include a clean-up mechanism. To remove resources, you'll need to manually delete them via the AWS Console or AWS CLI in reverse order of creation (e.g., delete listener, then target group, then ALB, then EC2, then security groups, then route tables, then NAT Gateway, then subnets). Consider using AWS
+* **Clean-up:** This script **does not** include a clean-up mechanism. To remove resources, you'll need to manually delete them via the AWS Console or AWS CLI in reverse order of creation (e.g., delete listener, then target group, then ALB, then EC2, then security groups, then route tables, then NAT Gateway, then subnets). Consider using AWS CloudFormation or Terraform for robust infrastructure lifecycle management.
+* **SSH Access:** For production environments, tighten the SSH security group rule (port 22) to allow access only from specific IP addresses or a bastion host, not `0.0.0.0/0`.
+* **HTTPS:** This script sets up an HTTP listener. For production, configure HTTPS on your ALB using AWS Certificate Manager (ACM).
+
+## Troubleshooting
+
+* **Script fails:** Check the output for specific AWS CLI error messages. Ensure your AWS CLI credentials have sufficient permissions.
+* **"VPC ID is invalid"**: Double-check the `VPC_ID_TO_USE` variable in the script.
+* **"Could not find a suitable AMI"**: Verify `AWS_REGION` is correct and that Ubuntu 24.04 AMIs are available there.
+* **ALB DNS not resolving / "Page not found"**:
+    * Allow a few minutes for ALB health checks to pass after EC2 instance launch.
+    * Verify the EC2 instance is `running` and has passed health checks in the AWS console.
+    * Check your security group rules.
+
+## License
+
+This project is open-source and available under the [MIT License](LICENSE).
